@@ -1,6 +1,6 @@
-package org.dima.mongotest;
+package org.dima.nosqltest;
 
-import org.dima.mongotest.configure.ApplicationConfiguration;
+import org.dima.nosqltest.configure.CassandraConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -12,6 +12,6 @@ public class Application
 {
     public static void main(String[] args)
     {
-        SpringApplication.run(new Class<?>[]{Application.class, ApplicationConfiguration.class}, args);
+        SpringApplication.run(new Class<?>[]{Application.class, CassandraConfiguration.class}, args);
     }
 }
