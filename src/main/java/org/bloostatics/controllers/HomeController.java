@@ -1,8 +1,10 @@
-package org.dima.nosqltest.controllers;
+package org.bloostatics.controllers;
 
-import org.dima.nosqltest.models.Greeting;
-import org.dima.nosqltest.repositories.GreetRepository;
+import org.bloostatics.models.Device;
+import org.bloostatics.models.Greeting;
+import org.bloostatics.repositories.GreetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,6 +22,8 @@ public class HomeController
 {
     @Autowired
     private GreetRepository greetRepository;
+    @Autowired
+    private CassandraOperations cassandraOperations;
 
     @RequestMapping(value = "/greeting", method = RequestMethod.GET)
     public List<Greeting> greeting()
@@ -31,11 +35,22 @@ public class HomeController
 
     @RequestMapping(value = "/greeting",method = RequestMethod.POST)
     public Greeting saveGreeting(@RequestBody Greeting greeting) {
+        System.out.println(cassandraOperations.getSession().getCluster().getClusterName());
         greeting.setCreationDate(new Date());
         greetRepository.save(greeting);
         return greeting;
     }
 
+    /*@RequestMapping(value = "/generateSomeDevices", method = RequestMethod.GET)
+    public List<Device> generateDevices()
+    {
+        List<Device> devices = new ArrayList<>(100);
+        for (int i = 0; i < 100; ++i) {
+            devices.add(new Device());
+            cassandraOperations.insert(devices.get(i));
+        }
+        return devices;
+    }*/
 
     @RequestMapping("/lab1")
     public List<String> lab1()
@@ -61,5 +76,6 @@ public class HomeController
         }
         return totalResult;
     }
+
 
 }

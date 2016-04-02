@@ -1,6 +1,6 @@
-package org.dima.nosqltest.repositories;
+package org.bloostatics.repositories;
 
-import org.dima.nosqltest.models.Greeting;
+import org.bloostatics.models.Greeting;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.data.cassandra.repository.Query;
 

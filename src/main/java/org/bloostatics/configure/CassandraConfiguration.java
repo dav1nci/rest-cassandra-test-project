@@ -1,4 +1,4 @@
-package org.dima.nosqltest.configure;
+package org.bloostatics.configure;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import org.springframework.data.cassandra.repository.config.EnableCassandraRepos
  */
 @Configuration
 @PropertySource(value = {"classpath:cassandra.properties"})
-@EnableCassandraRepositories(basePackages = {"org.dima.nosqltest"})
+@EnableCassandraRepositories(basePackages = {"org.bloostatics"})
 public class CassandraConfiguration
 {
     @Autowired
@@ -36,14 +36,17 @@ public class CassandraConfiguration
         cluster.setPort(Integer.parseInt(environment.getProperty("cassandra.port")));
         return cluster;
     }
+
     @Bean
     public CassandraMappingContext mappingContext() {
         return new BasicCassandraMappingContext();
     }
+
     @Bean
     public CassandraConverter converter() {
         return new MappingCassandraConverter(mappingContext());
     }
+
     @Bean
     public CassandraSessionFactoryBean session() throws Exception {
         CassandraSessionFactoryBean session = new CassandraSessionFactoryBean();
@@ -53,6 +56,7 @@ public class CassandraConfiguration
         session.setSchemaAction(SchemaAction.NONE);
         return session;
     }
+
     @Bean
     public CassandraOperations cassandraTemplate() throws Exception {
         return new CassandraTemplate(session().getObject());
