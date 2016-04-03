@@ -1,6 +1,5 @@
 package org.bloostatics.models;
 
-import com.datastax.driver.core.utils.UUIDs;
 import org.springframework.cassandra.core.Ordering;
 import org.springframework.cassandra.core.PrimaryKeyType;
 import org.springframework.data.cassandra.mapping.Column;
@@ -8,6 +7,7 @@ import org.springframework.data.cassandra.mapping.PrimaryKeyClass;
 import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
@@ -17,27 +17,47 @@ import java.util.UUID;
 @PrimaryKeyClass
 public class Patient implements Serializable
 {
-    @PrimaryKeyColumn(name = "doctor_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
-    private UUID id = UUIDs.timeBased();
-    @PrimaryKeyColumn(name = "email", ordinal = 1, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
+    @PrimaryKeyColumn(name = "email", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private String email;
-    @PrimaryKeyColumn(name = "password", ordinal = 2, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
+    @PrimaryKeyColumn(name = "password", ordinal = 1, type = PrimaryKeyType.CLUSTERED)
     private String password;
-    @Column(value = "name")
-    private String name;
-    @Column(value = "surname")
+    @PrimaryKeyColumn(name = "doctor_id", ordinal = 2, type = PrimaryKeyType.CLUSTERED)
+    private UUID doctorId;
+    @PrimaryKeyColumn(name = "surname", ordinal = 3, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
     private String surname;
+    @PrimaryKeyColumn(name = "name", ordinal = 4, type = PrimaryKeyType.CLUSTERED)
+    private String name;
+    @Column(value = "device_id")
+    private UUID deviceId;
+    @Column(value = "registration_date")
+    private Date registrationDate;
     @Column(value = "diagnosis")
     private Map<String, Double> diagnosis;
     @Column(value = "analysis")
     private Map<String, Double> analysis;
 
-    public UUID getId() {
-        return id;
+    public UUID getDeviceId() {
+        return deviceId;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setDeviceId(UUID deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public Date getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(Date registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public UUID getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(UUID doctorId) {
+        this.doctorId = doctorId;
     }
 
     public String getEmail() {

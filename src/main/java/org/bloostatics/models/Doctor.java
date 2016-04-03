@@ -19,14 +19,14 @@ public class Doctor implements Serializable
 {
     @PrimaryKeyColumn(name = "email", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private String email;
-    @PrimaryKeyColumn(name = "password", ordinal = 1, type = PrimaryKeyType.PARTITIONED)
-    private String password;
-    @PrimaryKeyColumn(name = "id", ordinal = 2, type = PrimaryKeyType.CLUSTERED)
+    @PrimaryKeyColumn(name = "id", ordinal = 1, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
     private UUID id = UUIDs.timeBased();
-    @PrimaryKeyColumn(name = "surname", ordinal = 4, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
+    @PrimaryKeyColumn(name = "surname", ordinal = 2, type = PrimaryKeyType.CLUSTERED)
     private String surname;
     @PrimaryKeyColumn(name = "name", ordinal = 3, type = PrimaryKeyType.CLUSTERED)
     private String name;
+    @Column(value = "password")
+    private String password;
     @Column(value = "registration_date")
     private Date registrationDate;
 

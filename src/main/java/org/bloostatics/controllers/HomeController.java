@@ -41,16 +41,16 @@ public class HomeController
         return greeting;
     }
 
-    /*@RequestMapping(value = "/generateSomeDevices", method = RequestMethod.GET)
+    @RequestMapping(value = "/generateSomeDevices", method = RequestMethod.GET)
     public List<Device> generateDevices()
     {
         List<Device> devices = new ArrayList<>(100);
-        for (int i = 0; i < 100; ++i) {
+        for (int i = 0; i < 30; ++i) {
             devices.add(new Device());
             cassandraOperations.insert(devices.get(i));
         }
         return devices;
-    }*/
+    }
 
     @RequestMapping("/lab1")
     public List<String> lab1()
