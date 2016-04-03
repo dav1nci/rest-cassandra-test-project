@@ -12,3 +12,13 @@ CREATE TABLE IF NOT EXISTS device (
     is_empty int,
     PRIMARY KEY (id)
 ) WITH CLUSTERING ORDER BY (id DESC);
+
+CREATE TABLE IF NOT EXISTS doctor (
+    email text,
+    password text,
+    id timeuuid,
+    surname text,
+    name text,
+    registration_date timestamp,
+    PRIMARY KEY ((email, password), surname, id, name)
+) WITH CLUSTERING ORDER BY (surname DESC);

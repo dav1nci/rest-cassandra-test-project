@@ -18,9 +18,9 @@ import java.util.UUID;
 @PrimaryKeyClass
 public class Greeting implements Serializable
 {
-    @PrimaryKeyColumn(name = "id", ordinal = 2, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
+    @PrimaryKeyColumn(name = "id", ordinal = 2, type = PrimaryKeyType.PARTITIONED)
     private UUID id = UUIDs.timeBased();
-    @PrimaryKeyColumn(name = "user", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
+    @PrimaryKeyColumn(name = "user", ordinal = 0, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
     private String user;
     @Column(value = "greet")
     private String greet;
