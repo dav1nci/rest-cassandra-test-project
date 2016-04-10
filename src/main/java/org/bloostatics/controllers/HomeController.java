@@ -2,9 +2,11 @@ package org.bloostatics.controllers;
 
 import org.bloostatics.models.Device;
 import org.bloostatics.models.Greeting;
-import org.bloostatics.repositories.GreetRepository;
+import org.bloostatics.services.AsyncService;
+import org.bloostatics.services.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.cassandra.core.CassandraOperations;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,33 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Future;
 
 /**
  * Created by dima on 21.02.16.
  */
 @RestController
+@EnableAsync
 public class HomeController
 {
     @Autowired
-    private GreetRepository greetRepository;
-    @Autowired
     private CassandraOperations cassandraOperations;
-
-    @RequestMapping(value = "/greeting", method = RequestMethod.GET)
-    public List<Greeting> greeting()
-    {
-        List<Greeting> response = new ArrayList<>();
-        greetRepository.findAll().forEach(response::add);
-        return response;
-    }
-
-    @RequestMapping(value = "/greeting",method = RequestMethod.POST)
-    public Greeting saveGreeting(@RequestBody Greeting greeting) {
-        System.out.println(cassandraOperations.getSession().getCluster().getClusterName());
-        greeting.setCreationDate(new Date());
-        greetRepository.save(greeting);
-        return greeting;
-    }
+    @Autowired
+    private AsyncService asyncService;
 
     @RequestMapping(value = "/generateSomeDevices", method = RequestMethod.GET)
     public List<Device> generateDevices()
@@ -50,6 +38,19 @@ public class HomeController
             cassandraOperations.insert(devices.get(i));
         }
         return devices;
+    }
+
+    @RequestMapping("/tryAsync")
+    public List<User> getUser() throws Exception
+    {
+        Future<User> page1 = asyncService.findUser("PivotalSoftware");
+        Future<User> page2 = asyncService.findUser("CloudFoundry");
+        Future<User> page3 = asyncService.findUser("Spring-Projects");
+        List<User> users = new ArrayList<>();
+        users.add(page1.get());
+        users.add(page2.get());
+        users.add(page3.get());
+        return users;
     }
 
     @RequestMapping("/lab1")

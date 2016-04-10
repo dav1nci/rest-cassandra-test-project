@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS greeting (
 CREATE TABLE IF NOT EXISTS device (
     id timeuuid,
     is_empty int,
-    PRIMARY KEY (id, is_empty)
-) WITH CLUSTERING ORDER BY (is_empty DESC);
+    PRIMARY KEY (id)
+);
 
 CREATE TABLE IF NOT EXISTS doctor (
     email text,
@@ -26,16 +26,32 @@ CREATE TABLE IF NOT EXISTS doctor (
 CREATE TABLE IF NOT EXISTS patient (
     email text,
     password text,
+    surname text,
+    name text,
+    doctor_id timeuuid,
+    device_id timeuuid,
+    registration_date timestamp,
+    analyses list<text>,
+    diagnosis map<text, double>,
+    PRIMARY KEY (email, password,
+    surname, name)
+) WITH CLUSTERING ORDER BY (password DESC);
+
+CREATE TABLE IF NOT EXISTS general_blood_analysis (
+    patient_email text,
+    day text,
+    event_time timestamp,
+    analyses map<text, double>,
+    PRIMARY KEY ((patient_email, day), event_time)
+) WITH CLUSTERING ORDER BY (event_time DESC);
+
+CREATE TABLE IF NOT EXISTS patients_by_doctor (
     doctor_id timeuuid,
     surname text,
     name text,
-    device_id timeuuid,
-    registration_date timestamp,
-    diagnosis map<text, double>,
-    analysis map<text, double>,
-    PRIMARY KEY (email, password,
-    doctor_id, surname, name)
-) WITH CLUSTERING ORDER BY (password DESC);
+    email text,
+    PRIMARY KEY (doctor_id, surname, name)
+) WITH CLUSTERING ORDER BY (surname DESC);
 
 
 {

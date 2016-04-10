@@ -8,6 +8,7 @@ import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -19,11 +20,11 @@ public class Patient implements Serializable
 {
     @PrimaryKeyColumn(name = "email", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private String email;
-    @PrimaryKeyColumn(name = "password", ordinal = 1, type = PrimaryKeyType.CLUSTERED)
+    @PrimaryKeyColumn(name = "password", ordinal = 1, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
     private String password;
     @PrimaryKeyColumn(name = "doctor_id", ordinal = 2, type = PrimaryKeyType.CLUSTERED)
     private UUID doctorId;
-    @PrimaryKeyColumn(name = "surname", ordinal = 3, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
+    @PrimaryKeyColumn(name = "surname", ordinal = 3, type = PrimaryKeyType.CLUSTERED)
     private String surname;
     @PrimaryKeyColumn(name = "name", ordinal = 4, type = PrimaryKeyType.CLUSTERED)
     private String name;
@@ -33,8 +34,8 @@ public class Patient implements Serializable
     private Date registrationDate;
     @Column(value = "diagnosis")
     private Map<String, Double> diagnosis;
-    @Column(value = "analysis")
-    private Map<String, Double> analysis;
+    @Column(value = "analyses")
+    private List<String> analyses;
 
     public UUID getDeviceId() {
         return deviceId;
@@ -100,12 +101,12 @@ public class Patient implements Serializable
         this.diagnosis = diagnosis;
     }
 
-    public Map<String, Double> getAnalysis() {
-        return analysis;
+    public List<String> getAnalyses() {
+        return analyses;
     }
 
-    public void setAnalysis(Map<String, Double> analysis) {
-        this.analysis = analysis;
+    public void setAnalyses(List<String> analyses) {
+        this.analyses = analyses;
     }
 
     @Override
