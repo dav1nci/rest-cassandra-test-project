@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS doctor (
     surname text,
     name text,
     registration_date timestamp,
+    birth_day timestamp,
+    speciality text,
     PRIMARY KEY (email, id, surname, name)
 ) WITH CLUSTERING ORDER BY (id DESC);
 
@@ -37,7 +39,7 @@ CREATE TABLE IF NOT EXISTS patient (
     surname, name)
 ) WITH CLUSTERING ORDER BY (password DESC);
 
-CREATE TABLE IF NOT EXISTS general_blood_analysis (
+    CREATE TABLE IF NOT EXISTS general_blood_analysis (
     patient_email text,
     day text,
     event_time timestamp,

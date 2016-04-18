@@ -29,6 +29,10 @@ public class Doctor implements Serializable
     private String password;
     @Column(value = "registration_date")
     private Date registrationDate;
+    @Column(value = "birth_day")
+    private Date birthDay;
+    @Column(value = "speciality")
+    private String speciality;
 
     public Doctor() {
     }
@@ -86,6 +90,22 @@ public class Doctor implements Serializable
 
     public void setRegistrationDate(Date registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    public Date getBirthDay() {
+        return birthDay;
+    }
+
+    public void setBirthDay(Date birthDay) {
+        this.birthDay = birthDay;
+    }
+
+    public String getSpeciality() {
+        return speciality;
+    }
+
+    public void setSpeciality(String speciality) {
+        this.speciality = speciality;
     }
 
     @Override

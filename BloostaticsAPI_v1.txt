@@ -1,0 +1,24 @@
+IP:8080/doctor/addNewDoctor 
+{
+    "email" : "kovaleko@gmail.com",
+    "password" : "password10",
+    "surname" : "Kovalenko",
+    "name": "Alexander",
+!!    "birthday" : "2016-31-04",
+!!    "speciality" : "Threapevt"
+}
+
+127.0.0.1:8080/patient/addNewPatient
+{
+    "email" : "q",
+    "password" : "aaaaaa",
+    "doctorId" : "9fcbdce0-f991-11e5-919c-f7db3580a3b7",
+    "surname" : "Qsde",
+    "name" : "Dsda",
+    "deviceId" : "1ac43350-f994-11e5-b0c8-f7db3580a3b7",
+!!    "birthday" : "2016-31-04"
+}
+
+
+
+
