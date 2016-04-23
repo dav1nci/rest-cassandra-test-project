@@ -23,7 +23,8 @@ public class DoctorController {
     @RequestMapping(value = "/addNewDoctor", method = RequestMethod.POST)
     public Doctor addNewDoctor(@RequestBody Doctor doctor)
     {
-        System.out.println("New doctor");
+        System.out.print("New doctor ");
+        System.out.println(doctor.getEmail());
         if (doctorRepository.checkIfEmailExists(doctor.getEmail()) != null)
             throw new EmailAlreadyExistsException();
         else {
