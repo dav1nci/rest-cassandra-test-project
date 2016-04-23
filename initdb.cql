@@ -39,12 +39,11 @@ CREATE TABLE IF NOT EXISTS patient (
     surname, name)
 ) WITH CLUSTERING ORDER BY (password DESC);
 
-    CREATE TABLE IF NOT EXISTS general_blood_analysis (
+CREATE TABLE IF NOT EXISTS general_blood_analysis (
     patient_email text,
-    day text,
     event_time timestamp,
     analyses map<text, double>,
-    PRIMARY KEY ((patient_email, day), event_time)
+    PRIMARY KEY (patient_email, event_time)
 ) WITH CLUSTERING ORDER BY (event_time DESC);
 
 CREATE TABLE IF NOT EXISTS patients_by_doctor (
@@ -54,6 +53,14 @@ CREATE TABLE IF NOT EXISTS patients_by_doctor (
     email text,
     PRIMARY KEY (doctor_id, surname, name)
 ) WITH CLUSTERING ORDER BY (surname DESC);
+
+
+UPDATE patient SET analyses =
+analyses + ['general_blood_analysis']
+WHERE email = 'gen' AND
+password = 'aaaaaa' AND
+surname = 'Qsde' AND
+name = 'Dsda';
 
 
 {

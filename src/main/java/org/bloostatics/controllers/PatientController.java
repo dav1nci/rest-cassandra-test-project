@@ -4,9 +4,7 @@ import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.bloostatics.exceptions.NoSuchDeviceException;
-import org.bloostatics.exceptions.NoSuchDoctorException;
-import org.bloostatics.exceptions.PatientAlreadyExistsException;
+import org.bloostatics.exceptions.*;
 import org.bloostatics.models.*;
 import org.bloostatics.repositories.DeviceRepository;
 import org.bloostatics.repositories.DoctorRepository;
@@ -80,11 +78,22 @@ public class PatientController {
         return patient;
     }
 
-    /*@RequestMapping(value = "/addGeneralAnalysisData")
-    public String addGeneralAnalysisData(@RequestBody List<>)
+    @RequestMapping(value = "/addGeneralAnalysisData", method = RequestMethod.POST)
+    public GeneralBloodAnalysis addGeneralAnalysisData(@RequestBody GeneralBloodAnalysis analysis)
     {
-        return null;
-    }*/
+        Patient patient = patientRepository.findByEmail(analysis.getPatient_email());
+        if (patient == null)
+            throw new NoSuchPatientException();
+        else if (patient.getAnalyses().contains("general_blood_analysis")){
+            Insert generalBloodAnalysis = QueryBuilder.insertInto("general_blood_analysis");
+            generalBloodAnalysis.value("patient_email", analysis.getPatient_email());
+            generalBloodAnalysis.value("event_time", analysis.getEventTime());
+            generalBloodAnalysis.value("analyses", analysis.getAnalysis());
+            cassandraOperations.execute(generalBloodAnalysis);
+            return analysis;
+        }else
+            throw new NoSuchAnalysisException();
+    }
 
     @RequestMapping(value = "/generateGeneralBloodAnalysisData")
     public String generateGeneralBloodAnalysisData()

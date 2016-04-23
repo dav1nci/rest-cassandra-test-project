@@ -17,9 +17,7 @@ public class GeneralBloodAnalysis
 {
     @PrimaryKeyColumn(name = "patient_email", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private String patient_email;
-    @PrimaryKeyColumn(name = "day", ordinal = 1, type = PrimaryKeyType.PARTITIONED)
-    private String day;
-    @PrimaryKeyColumn(name = "event_time", ordinal = 2, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
+    @PrimaryKeyColumn(name = "event_time", ordinal = 1, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
     private long eventTime;
     @Column(value = "analysis")
     private Map<String, Double> analysis;
@@ -30,14 +28,6 @@ public class GeneralBloodAnalysis
 
     public void setPatient_email(String patient_email) {
         this.patient_email = patient_email;
-    }
-
-    public String getDay() {
-        return day;
-    }
-
-    public void setDay(String day) {
-        this.day = day;
     }
 
     public long getEventTime() {
