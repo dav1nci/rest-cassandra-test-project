@@ -1,4 +1,7 @@
-CREATE KEYSPACE IF NOT EXISTS example WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'}  AND durable_writes = true;
+CREATE KEYSPACE IF NOT EXISTS bloostatics
+WITH replication = {'class': 'SimpleStrategy',
+'replication_factor': '1'}  AND durable_writes = true;
+
 CREATE TABLE IF NOT EXISTS greeting (
     user text,
     id timeuuid,

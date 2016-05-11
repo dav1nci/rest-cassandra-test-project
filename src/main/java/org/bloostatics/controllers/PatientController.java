@@ -71,8 +71,8 @@ public class PatientController {
 
             Insert generalBloodAnalysis = QueryBuilder.insertInto("general_blood_analysis");
             generalBloodAnalysis.value("patient_email", patient.getEmail());
-            generalBloodAnalysis.value("day", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
             generalBloodAnalysis.value("event_time", new Date().getTime());
+            generalBloodAnalysis.value("analyses", new HashMap<>());
             cassandraOperations.execute(generalBloodAnalysis);
         }
         return patient;
