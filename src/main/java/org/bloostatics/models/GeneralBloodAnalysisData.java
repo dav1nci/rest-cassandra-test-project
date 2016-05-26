@@ -1,19 +1,21 @@
 package org.bloostatics.models;
 
+import java.io.Serializable;
+
 /**
  * Created by stdima on 23.04.16.
  */
-public class GeneralBloodAnalysisTrainingSet
+public class GeneralBloodAnalysisData implements Serializable
 {
-    int ageCategory;
-    double leukocytes;
-    double erythrocytes;
-    double hemoglobin;
-    double hematocrit;
-    double erythrocytesMedian;
-    double hemoglobinInErythrocyte;
-    double hemoglobinAverageInErythrocyte;
-    double platelets;
+    private int ageCategory;
+    private double leukocytes;
+    private double erythrocytes;
+    private double hemoglobin;
+    private double hematocrit;
+    private double erythrocytesMedian;
+    private double hemoglobinInErythrocyte;
+    private double hemoglobinAverageInErythrocyte;
+    private double platelets;
 
     public int getAgeCategory() {
         return ageCategory;

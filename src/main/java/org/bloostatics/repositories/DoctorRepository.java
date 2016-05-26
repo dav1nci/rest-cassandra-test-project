@@ -16,4 +16,6 @@ public interface DoctorRepository extends CassandraRepository<Doctor> {
     Doctor checkIfEmailExists(String email);
     @Query("select * from doctor where id = ?0 ALLOW FILTERING")
     Doctor findById(UUID id);
+    @Query("select * from doctor where email = ?0")
+    Doctor findByEmail(String email);
 }

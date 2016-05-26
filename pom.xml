@@ -43,7 +43,17 @@
             <artifactId>gson</artifactId>
             <version>2.6.2</version>
         </dependency>
-
+        <!-- http://mvnrepository.com/artifact/org.json/json -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20160212</version>
+        </dependency>
+        <dependency>
+            <groupId>org.python</groupId>
+            <artifactId>jython</artifactId>
+            <version>2.7.0</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -1,41 +1,27 @@
 package org.bloostatics.models;
 
-import org.springframework.cassandra.core.Ordering;
-import org.springframework.cassandra.core.PrimaryKeyType;
-import org.springframework.data.cassandra.mapping.Column;
-import org.springframework.data.cassandra.mapping.PrimaryKeyClass;
-import org.springframework.data.cassandra.mapping.PrimaryKeyColumn;
+import org.springframework.data.cassandra.mapping.*;
 
+import java.io.Serializable;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by stdima on 10.04.16.
  */
-@PrimaryKeyClass
-public class GeneralBloodAnalysis
+@Table(value = "general_blood_analysis")
+public class GeneralBloodAnalysis implements Serializable
 {
-    @PrimaryKeyColumn(name = "patient_email", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
-    private String patient_email;
-    @PrimaryKeyColumn(name = "event_time", ordinal = 1, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
-    private long eventTime;
+    @PrimaryKey
+    private GeneralBloodAnalysisKey key;
     @Column(value = "analysis")
     private Map<String, Double> analysis;
 
-    public String getPatient_email() {
-        return patient_email;
+    public GeneralBloodAnalysisKey getKey() {
+        return key;
     }
 
-    public void setPatient_email(String patient_email) {
-        this.patient_email = patient_email;
-    }
-
-    public long getEventTime() {
-        return eventTime;
-    }
-
-    public void setEventTime(long eventTime) {
-        this.eventTime = eventTime;
+    public void setKey(GeneralBloodAnalysisKey key) {
+        this.key = key;
     }
 
     public Map<String, Double> getAnalysis() {

@@ -2,14 +2,6 @@ CREATE KEYSPACE IF NOT EXISTS bloostatics
 WITH replication = {'class': 'SimpleStrategy',
 'replication_factor': '1'}  AND durable_writes = true;
 
-CREATE TABLE IF NOT EXISTS greeting (
-    user text,
-    id timeuuid,
-    greet text,
-    creation_date timestamp,
-    PRIMARY KEY (user, id)
-) WITH CLUSTERING ORDER BY (id DESC);
-
 CREATE TABLE IF NOT EXISTS device (
     id timeuuid,
     is_empty int,
@@ -25,7 +17,7 @@ CREATE TABLE IF NOT EXISTS doctor (
     registration_date timestamp,
     birth_day timestamp,
     speciality text,
-    PRIMARY KEY (email, id, surname, name)
+    PRIMARY KEY (email, id, surname, name, password)
 ) WITH CLUSTERING ORDER BY (id DESC);
 
 CREATE TABLE IF NOT EXISTS patient (
@@ -45,7 +37,7 @@ CREATE TABLE IF NOT EXISTS patient (
 CREATE TABLE IF NOT EXISTS general_blood_analysis (
     patient_email text,
     event_time timestamp,
-    analyses map<text, double>,
+    analysis map<text, double>,                                         
     PRIMARY KEY (patient_email, event_time)
 ) WITH CLUSTERING ORDER BY (event_time DESC);
 
@@ -60,10 +52,18 @@ CREATE TABLE IF NOT EXISTS patients_by_doctor (
 
 UPDATE patient SET analyses =
 analyses + ['general_blood_analysis']
-WHERE email = 'gen' AND
-password = 'aaaaaa' AND
-surname = 'Qsde' AND
-name = 'Dsda';
+WHERE email = 'dgdfg@df.com' AND
+password = 'sdfsdfsdf' AND
+surname = 'dfgdfgdfg' AND
+name = 'dfgdfgdfg';
+
+SELECT * FROM general_blood_analysis
+WHERE patient_email = 'dgdfg@df.com'
+LIMIT 2;
+
+SELECT * FROM patients_by_doctor WHERE
+surname = 'Qsde' AND name =
+'Dsda' ALLOW FILTERING;
 
 
 {

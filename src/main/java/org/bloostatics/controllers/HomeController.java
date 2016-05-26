@@ -4,6 +4,9 @@ import org.bloostatics.models.Device;
 import org.bloostatics.models.Greeting;
 import org.bloostatics.services.AsyncService;
 import org.bloostatics.services.User;
+import org.python.core.PyObject;
+import org.python.core.PyString;
+import org.python.util.PythonInterpreter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.Future;
 
 /**
@@ -51,6 +55,17 @@ public class HomeController
         users.add(page2.get());
         users.add(page3.get());
         return users;
+    }
+
+    @RequestMapping(value = "/python", method = RequestMethod.GET)
+    public String python(){
+//        /*PythonInterpreter.initialize(System.getProperties(), System.getProperties(), new String[0]);
+//        PythonInterpreter interpreter = new PythonInterpreter();
+//        interpreter.execfile("/home/stdima/Documents/Projects/IdeaProjects/MongoTestProject/src/main/resources/pyt.py");
+//        PyObject fun = interpreter.get("hello");
+//        PyObject res = fun.__call__(new PyString("Hello from Java"));
+//        String resStr = (String) res.__tojava__(String.class);*/
+        return null;
     }
 
     @RequestMapping("/lab1")
