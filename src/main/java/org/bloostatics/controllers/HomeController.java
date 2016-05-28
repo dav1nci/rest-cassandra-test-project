@@ -87,7 +87,7 @@ public class HomeController
             }
             else {
                 totalResult.add(buffer);
-                buffer = result.get(i);
+                buffer = result.get(i)  ;
             }
         }
         return totalResult;

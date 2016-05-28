@@ -3,7 +3,9 @@ package org.bloostatics.controllers;
 import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Select;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.bloostatics.exceptions.*;
 import org.bloostatics.models.*;
@@ -18,6 +20,7 @@ import org.springframework.data.cassandra.core.CassandraOperations;
 import org.springframework.hateoas.alps.Doc;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -74,11 +77,25 @@ public class PatientController {
             patientsByDoctor.value("email", patient.getEmail());
             cassandraOperations.execute(patientsByDoctor);
 
-            Insert generalBloodAnalysis = QueryBuilder.insertInto("general_blood_analysis");
-            generalBloodAnalysis.value("patient_email", patient.getEmail());
-            generalBloodAnalysis.value("event_time", new Date().getTime());
-            generalBloodAnalysis.value("analysis", new HashMap<>());
-            cassandraOperations.execute(generalBloodAnalysis);
+            String hackJson = "{\n" +
+                    "    \"key\" : {\n" +
+                    "        \"patientEmail\" : \"" + patient.getEmail() + "\"    \n" +
+                    "    },\n" +
+                    "    \"analysis\" : {\n" +
+                    "        \"ageCategory\": 18,\n" +
+                    "        \"leukocytes\": 8.5811964401304646E9,\n" +
+                    "        \"erythrocytes\": 3.2793520121157227E12,\n" +
+                    "        \"hemoglobin\": 125.41453757700343,\n" +
+                    "        \"hematocrit\": 50.75135968224013,\n" +
+                    "        \"erythrocytesMedian\": 93.07321262343845,\n" +
+                    "        \"hemoglobinInErythrocyte\": 35.37189449096424,\n" +
+                    "        \"hemoglobinAverageInErythrocyte\": 290.890230289122,\n" +
+                    "        \"platelets\": 2.8670093272228476E11\n" +
+                    "  }\n" +
+                    "}";
+            GeneralBloodAnalysis buffer = new Gson().fromJson(hackJson, GeneralBloodAnalysis.class);
+            buffer.getKey().setEventTime(new Date());
+            generalBloodAnalysisRepository.save(buffer);
         }
         return patient;
     }
@@ -109,25 +126,27 @@ public class PatientController {
 
         JSONObject result = new JSONObject();
         JSONArray analysisData = new JSONArray();
-        Patient patientFromDB = patientRepository.findByEmailAndPassword(patient.getEmail(), patient.getPassword());
+        Patient patientFromDB = patientRepository.findByEmail(patient.getEmail());
         Doctor doctorFromDB = doctorRepository.findByEmail(patient.getEmail());
-        System.out.println("Doctor is " + doctorFromDB.getEmail());
         if (patientFromDB == null) {
             if (doctorFromDB == null) {
                 throw new NoSuchPatientException();
             }
         }
-        else if (doctorFromDB == null) {
+        if (doctorFromDB == null) {
             if (patientFromDB == null) {
                 throw new NoSuchDoctorException();
             }
         }
-        else if (patientFromDB != null) {
+        if (patientFromDB != null) {
+            System.out.println("find patient in db");
             result.put("role", "PATIENT");
             List<GeneralBloodAnalysis> analysisFromDB = generalBloodAnalysisRepository.findByEmail(patient.getEmail());
             for (GeneralBloodAnalysis i : analysisFromDB) {
                 JSONObject item = new JSONObject();
                 item.put("event_time", i.getKey().getEventTime());
+                /*if (i.getAnalysis() == null)
+                    return null;*/
                 for (Map.Entry<String, Double> entry : i.getAnalysis().entrySet()) {
                     if (entry.getKey().equals("ageCategory"))
                         continue;
@@ -138,9 +157,10 @@ public class PatientController {
             result.put("name", patientFromDB.getName());
             result.put("surname", patientFromDB.getSurname());
             result.put("analyses", analysisData);
+            result.put("diagnosis", patientFromDB.getDiagnosis());
         }
 
-        else if (doctorFromDB != null) {
+        if (doctorFromDB != null) {
             System.out.println("Doctor here");
             result.put("role", "DOCTOR");
             result.put("name", doctorFromDB.getName());
@@ -148,6 +168,34 @@ public class PatientController {
             result.put("id", doctorFromDB.getId());
         }
 //      result.put("birthday", new Date());
+        System.out.println("send result");
+        return result.toString();
+    }
+
+    @RequestMapping(value = "/getPatient", method = RequestMethod.POST)
+    public String getPatient(@RequestBody Map<String, String> request){
+        Patient patientFromDB = patientRepository.findByEmail(request.get("email"));
+        if (patientFromDB == null)
+            throw new NoSuchPatientException();
+        JSONObject result = new JSONObject();
+        JSONArray analysisData = new JSONArray();
+        List<GeneralBloodAnalysis> analysisFromDB = generalBloodAnalysisRepository.findByEmail(request.get("email"));
+        for (GeneralBloodAnalysis i : analysisFromDB) {
+            JSONObject item = new JSONObject();
+            item.put("event_time", i.getKey().getEventTime());
+            if (i.getAnalysis() == null)
+                return null;
+            for (Map.Entry<String, Double> entry : i.getAnalysis().entrySet()) {
+                if (entry.getKey().equals("ageCategory"))
+                    continue;
+                item.put(entry.getKey(), entry.getValue());
+            }
+            analysisData.put(item);
+        }
+        result.put("name", patientFromDB.getName());
+        result.put("surname", patientFromDB.getSurname());
+        result.put("analyses", analysisData);
+        result.put("diagnosis", patientFromDB.getDiagnosis());
         return result.toString();
     }
 
@@ -157,10 +205,12 @@ public class PatientController {
         Patient patient = patientRepository.findByNameAndSurname(request.get("name"), request.get("surname"));
         if (patient == null)
             throw new NoSuchPatientException();
-        JSONObject responce = new JSONObject();
-        responce.put("name", patient.getName());
-        responce.put("surname", patient.getSurname());
-        responce.put("email", patient.getEmail());
+        JSONObject item = new JSONObject();
+        JSONArray responce = new JSONArray();
+        item.put("name", patient.getName());
+        item.put("surname", patient.getSurname());
+        item.put("email", patient.getEmail());
+        responce.put(item);
 //        Select select = QueryBuilder.select().from("patients_by_doctor");
 //        select.where(QueryBuilder.gt("surname", request.get("surname")));
 //        System.out.println("id = " + request.get("doctor_id"));
@@ -203,5 +253,9 @@ public class PatientController {
         String json = new GsonBuilder().setPrettyPrinting().create().toJson(trainingSet);
         System.out.println("Total time: [" + (System.currentTimeMillis() - startTime) + "] ms");
         return json;
+    }
+    @RequestMapping("/poison")
+    public String genPoison(){
+        return null;
     }
 }

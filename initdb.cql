@@ -50,12 +50,12 @@ CREATE TABLE IF NOT EXISTS patients_by_doctor (
 ) WITH CLUSTERING ORDER BY (surname DESC);
 
 
-UPDATE patient SET analyses =
-analyses + ['general_blood_analysis']
-WHERE email = 'dgdfg@df.com' AND
+UPDATE patient SET diagnosis =
+{'poison' : 0.9, 'trombos' : 0.5}
+WHERE email = 'jack@gmail.com' AND
 password = 'sdfsdfsdf' AND
-surname = 'dfgdfgdfg' AND
-name = 'dfgdfgdfg';
+surname = 'Porter' AND
+name = 'Jack';
 
 SELECT * FROM general_blood_analysis
 WHERE patient_email = 'dgdfg@df.com'
