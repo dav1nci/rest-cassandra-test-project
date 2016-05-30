@@ -18,4 +18,6 @@ public interface PatientRepository extends CassandraRepository<Patient> {
     Patient findByEmail(String email);
     @Query("select * from patients_by_doctor where name = ?0 AND surname = ?1 ALLOW FILTERING")
     Patient findByNameAndSurname(String name, String surname);
+    @Query("select * from patient WHERE diagnosis CONTAINS -1 LIMIT 1")
+    Patient findWithNoDiagnose();
 }

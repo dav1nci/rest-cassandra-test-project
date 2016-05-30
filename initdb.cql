@@ -50,8 +50,9 @@ CREATE TABLE IF NOT EXISTS patients_by_doctor (
 ) WITH CLUSTERING ORDER BY (surname DESC);
 
 
+
 UPDATE patient SET diagnosis =
-{'poison' : 0.9, 'trombos' : 0.5}
+{'none' : -1}
 WHERE email = 'jack@gmail.com' AND
 password = 'sdfsdfsdf' AND
 surname = 'Porter' AND
