@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
 
 /**
  * Created by stdima on 03.04.16.
@@ -299,7 +300,22 @@ public class PatientController {
     @RequestMapping(value = "/analyseReady", method = RequestMethod.POST)
     public String analyseReady(@RequestBody Map<String, String> request){
         System.out.println("Diagnosis data comes to server");
-        System.out.println(request.get("email") + " " + request.get("diagnosis"));
+        System.out.println(request.get("diagnoses"));
+        Patient patient = patientRepository.findByEmail(request.get("email"));
+        System.out.println(request.get("email"));
+        Map<String, Double> diagnosis = new HashMap<>(1);
+        JSONArray diagnoses = new JSONArray(request.get("diagnoses"));
+        List<Double> indicators = new ArrayList<>(10);
+        for (int i = 0; i < 10; ++i){
+            indicators.add(diagnoses.getDouble(i));
+        }
+        //patientRepository.setDiagnosis(request, )
+        patientRepository.setDiagnosis(deseaseMapper(Integer.valueOf(request.get("most_probably"))), Collections.max(indicators), patient.getEmail(), patient.getPassword(), patient.getSurname(), patient.getName());
         return null;
+    }
+
+    private String deseaseMapper(int number){
+        String[] deseases = {"poison", "cancer", "aplastical_anemiya", "trombos", "leykos", "hyperhydrotation", "bone_marrow_desease", "vich_spid", "tuberkulose", "nothing_founded"};
+        return deseases[number];
     }
 }
