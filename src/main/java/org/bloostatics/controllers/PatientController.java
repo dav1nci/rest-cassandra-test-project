@@ -160,7 +160,9 @@ public class PatientController {
             result.put("name", patientFromDB.getName());
             result.put("surname", patientFromDB.getSurname());
             result.put("analyses", analysisData);
-            result.put("diagnosis", patientFromDB.getDiagnosis());
+            JSONArray diagArray = new JSONArray();
+            diagArray.put(patientFromDB.getDiagnosis());
+            result.put("diagnosis", diagArray);
         }
 
         if (doctorFromDB != null) {
@@ -291,8 +293,12 @@ public class PatientController {
 
     @RequestMapping(value = "/withNoDiagnose", method = RequestMethod.GET)
     public GeneralBloodAnalysis withNoDiagnose(){
+
+        Patient patient = patientRepository.findWithNoDiagnose();
+        if (patient == null)
+            throw new NoSuchPatientException();
         System.out.println("Getting data to analyse");
-        String email = patientRepository.findWithNoDiagnose().getEmail();
+        String email = patient.getEmail();
         List<GeneralBloodAnalysis> generalBloodAnalysises = generalBloodAnalysisRepository.findByEmail(email);
         return generalBloodAnalysises.get(generalBloodAnalysises.size() - 1);
     }
