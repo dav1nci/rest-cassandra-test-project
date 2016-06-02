@@ -208,4 +208,4 @@ labels = vectorize_y(labels)
 print('data loading complete')
 
 nn = NeuralNetwork(len(ims[0]), 10, 2, 30)
-nn.stochastic_gradient_decent(list(zip(ims, labels)), list(zip(test_ims, test_labels)), 10, 10, 100.0)
+nn.stochastic_gradient_decent(list(zip(ims, labels)), list(zip(test_ims, test_labels)), 10, 10, 3.0)
