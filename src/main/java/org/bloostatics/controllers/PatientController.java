@@ -107,7 +107,6 @@ public class PatientController {
     public GeneralBloodAnalysis addGeneralAnalysisData(@RequestBody GeneralBloodAnalysis analysis)
     {
         System.out.println("Request on add analysis data");
-        System.out.println(analysis.getAnalysis());
         Patient patient = patientRepository.findByEmail(analysis.getKey().getPatientEmail());
         if (patient == null)
             throw new NoSuchPatientException();

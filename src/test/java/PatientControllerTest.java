@@ -91,17 +91,14 @@ public class PatientControllerTest {
                 .content(this.json(patient))
                 .contentType(contentType))
                 .andExpect(status().isConflict());
-
     }
 
     @Test
     public void addGeneralAnalysisDataTest() throws Exception{
         GeneralBloodAnalysis analysis = new GeneralBloodAnalysis();
         GeneralBloodAnalysisKey key = new GeneralBloodAnalysisKey();
-        key.setEventTime(new Date());
-        key.setPatientEmail("jack@gmail.com");
-        analysis.setKey(key);
         Map<String, Double> analyses = new HashMap<>();
+
         analyses.put("ageCategory", 18.0);
         analyses.put("leukocytes", 8.5811964401304646E9);
         analyses.put("erythrocytes", 6.2793520121157227E12);
@@ -112,12 +109,12 @@ public class PatientControllerTest {
         analyses.put("hemoglobinAverageInErythrocyte", 320.89023028912);
         analyses.put("platelets", 4.8670093272228476E11);
         analysis.setAnalysis(analyses);
+        System.out.println(this.json(analyses));
         mockMvc.perform(post("/patient/addGeneralAnalysisData")
                 .content(this.json(analysis))
                 .contentType(contentType))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(contentType))
-                .andExpect(jsonPath("$.key.patientEmail", is("jack@gmail.com")));
+                .andExpect(content().contentType(contentType));
     }
 
     @Test
@@ -125,12 +122,25 @@ public class PatientControllerTest {
         Map<String, String> request = new HashMap<>();
         request.put("email", "jack@gmail.com");
         mockMvc.perform(post("/patient/getPatient")
-        .content(this.json(request))
-        .contentType(contentType))
+                .content(this.json(request))
+                .contentType(contentType))
                 .andExpect(jsonPath("$.name", is("Jack")))
                 .andExpect(jsonPath("$.surname", is("Porter")));
     }
 
+    @Test
+    public void find() throws Exception{
+        Map<String, String> request = new HashMap<>();
+        request.put("name", "Sara");
+        request.put("surname", "Leonard");
+        mockMvc.perform(post("/patient/find")
+        .content(this.json(request))
+        .contentType(contentType))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].surname", is("Leonard")))
+                .andExpect(jsonPath("$[0].name", is("Sara")))
+                .andExpect(jsonPath("$[0].email", is("sarraleo@gmail.com")));
+    }
 
     protected String json(Object o) throws IOException {
         MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
